@@ -1,3 +1,5 @@
+import javax.crypto.KeyGenerator;
+import javax.crypto.SecretKey;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
@@ -10,7 +12,7 @@ public class Main {
         Person person1fake = new Person("Brion Mariman","Warehem","0474654872");
 
         byte[] person1bytes = person1.getBytes();
-        byte[] person2Bytes = person2.getBytes();
+        byte[] personBytes = person2.getBytes();
         byte[] person1fakebytes = person1fake.getBytes();
 
         try {
@@ -26,6 +28,8 @@ public class Main {
             System.out.println("andere:");
             System.out.println(new String(person1fakebytes));
 
+            KeyGenerator keygen = KeyGenerator.getInstance("AES");
+            SecretKey aesKey = keygen.generateKey();
 
         } catch (NoSuchAlgorithmException e) {
             e.printStackTrace();
