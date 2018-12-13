@@ -1,9 +1,11 @@
 import javax.crypto.*;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
+import java.security.*;
 
 public class Main {
+
+    private static KeyPair pair;
+    private static PrivateKey privateKey;
+    private static PublicKey publicKey;
 
     public static void main(String[] args) {
 
@@ -68,8 +70,22 @@ public class Main {
 
             System.out.println("gedecrypteerde tekst: "+new String(cleartext1));
 
+
         } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
             e.printStackTrace();
         }
+
+        KeyPairGenerator keygenpair;
+        try {
+            keygenpair = KeyPairGenerator.getInstance("RSA");
+            keygenpair.initialize(4096);
+
+            pair = keygenpair.generateKeyPair();
+            privateKey = pair.getPrivate();
+            publicKey = pair.getPublic();
+        } catch (NoSuchAlgorithmException e) {
+            e.printStackTrace();
+        }
+
     }
 }
