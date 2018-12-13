@@ -1,4 +1,8 @@
 import javax.crypto.*;
+import java.security.InvalidKeyException;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.security.Signature;
 import java.security.*;
 
 public class Main {
@@ -39,6 +43,7 @@ public class Main {
         KeyGenerator keygen = null;
         try {
 
+            /*
             keygen = KeyGenerator.getInstance("AES");
 
             SecretKey aesKey = keygen.generateKey();
@@ -69,23 +74,80 @@ public class Main {
             byte[] cleartext1 = aesCipher.doFinal(ciphertext);
 
             System.out.println("gedecrypteerde tekst: "+new String(cleartext1));
+            */
 
+            KeyPairGenerator keygenpair;
 
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        }
-
-        KeyPairGenerator keygenpair;
-        try {
             keygenpair = KeyPairGenerator.getInstance("RSA");
             keygenpair.initialize(4096);
 
             pair = keygenpair.generateKeyPair();
             privateKey = pair.getPrivate();
             publicKey = pair.getPublic();
-        } catch (NoSuchAlgorithmException e) {
+
+
+
+            //SIGNATURE THING
+
+            //creeer signature via private keys
+            Signature rsa = Signature.getInstance("SHA256withRSA");
+
+            PrivateKey priv = pair.getPrivate();
+            rsa.initSign(priv);
+
+            /* Update and sign the data */
+            rsa.update(person2Bytes);
+            byte[] sig = rsa.sign();
+
+            PublicKey pub = pair.getPublic();
+            rsa.initVerify(pub);
+
+            /* Update and verify the data */
+            rsa.update(person2Bytes);
+            boolean verifies = rsa.verify(sig);
+            System.out.println("signature verifies: " + verifies);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        } catch (NoSuchAlgorithmException | InvalidKeyException /*| NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException*/ | SignatureException e) {
             e.printStackTrace();
         }
+
 
     }
 }
