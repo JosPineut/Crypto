@@ -40,10 +40,12 @@ public class Main {
             e.printStackTrace();
         }*/
 
+        byte[] cleartext = ("Shrek is een Amerikaanse komische computeranimatiefilm, geproduceerd door de firma DreamWorks. De film is gebaseerd op het gelijknamige boek van William Steig. De regie was in handen van Andrew Adamson en Vicky Jenson. De stemmen worden ").getBytes();
+        KeyPairGenerator keygenpair;
         KeyGenerator keygen = null;
         try {
 
-            /*
+
             keygen = KeyGenerator.getInstance("AES");
 
             SecretKey aesKey = keygen.generateKey();
@@ -57,9 +59,6 @@ public class Main {
             aesCipher.init(Cipher.ENCRYPT_MODE, aesKey);
 
             // Our cleartext
-            byte[] cleartext = ("Shrek is een Amerikaanse komische computeranimatiefilm, geproduceerd door de firma DreamWorks. De film is gebaseerd op het gelijknamige boek van William Steig. De regie was in handen van Andrew Adamson en Vicky Jenson. De stemmen worden " +
-                    "ingesproken door Mike Myers, Eddie Murphy, Cameron Diaz, en John Lithgow. De hoofdrolspeler is Shrek, een groene oger. In 2001 werd het eerste deel uitgebracht. De film was een groot succes en vestigde Dreamworks’ naam als producer van computeranimatiefilms. " +
-                    "De film kreeg drie vervolgen plus ook nog een behoorlijk aantal spin-offs. Zo is er een kerstmis- en halloweenspecial en ook een aparte film verschenen voor de gelaarsde kat (personage dat werd geïntroduceerd tijdens de 2de film).").getBytes();
 
             // Encrypt the cleartext
             byte[] ciphertext = aesCipher.doFinal(cleartext);
@@ -74,18 +73,29 @@ public class Main {
             byte[] cleartext1 = aesCipher.doFinal(ciphertext);
 
             System.out.println("gedecrypteerde tekst: "+new String(cleartext1));
-            */
 
-            KeyPairGenerator keygenpair;
 
+            Cipher RSAcypher;
+            RSAcypher = Cipher.getInstance("RSA");
             keygenpair = KeyPairGenerator.getInstance("RSA");
             keygenpair.initialize(4096);
 
-            pair = keygenpair.generateKeyPair();
+
+            pair=keygenpair.generateKeyPair();
+
             privateKey = pair.getPrivate();
             publicKey = pair.getPublic();
 
+            RSAcypher.init(Cipher.ENCRYPT_MODE, publicKey);
 
+            byte[] cleartext2 = RSAcypher.doFinal(cleartext);
+            System.out.println("Geencrypteerde tekst: ");
+            System.out.println(new String(cleartext2));
+
+            RSAcypher.init(Cipher.DECRYPT_MODE, privateKey);
+            byte[] cleartext3 = RSAcypher.doFinal(cleartext2);
+            System.out.println("Gedecrypteerde tekst: ");
+            System.out.println(new String(cleartext3));
 
             //SIGNATURE THING
 
@@ -108,45 +118,51 @@ public class Main {
             System.out.println("signature verifies: " + verifies);
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-        } catch (NoSuchAlgorithmException | InvalidKeyException /*| NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException*/ | SignatureException e) {
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
+            e.printStackTrace();
+        } catch (SignatureException e) {
             e.printStackTrace();
         }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
     }
