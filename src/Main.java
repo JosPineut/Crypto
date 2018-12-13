@@ -1,9 +1,10 @@
 import javax.crypto.*;
-import java.security.InvalidKeyException;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.security.Signature;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.security.*;
+import java.security.cert.X509Certificate;
+
+import java.security.cert.CertificateException;
 
 public class Main {
 
@@ -118,51 +119,43 @@ public class Main {
             System.out.println("signature verifies: " + verifies);
 
 
-        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException e) {
-            e.printStackTrace();
-        } catch (SignatureException e) {
+
+            KeyStore keyStore;
+            keyStore = KeyStore.getInstance("JKS");
+            String fileName = "D://Masterjaar gerief//portecle-1.11/" + "store1" + ".jks";
+            FileInputStream fis = new FileInputStream(fileName);
+            char[] password = "pokemon1".toCharArray();
+            keyStore.load(fis,password);
+            fis.close();
+
+            char[] password1 = "pokemon2".toCharArray();
+            String alias = "freya";
+
+            PrivateKey key = (PrivateKey) keyStore.getKey(alias,password1);
+            X509Certificate cert = (X509Certificate) keyStore.getCertificate(alias);
+
+            System.out.println(cert);
+
+
+            keyStore = KeyStore.getInstance("JKS");
+            fileName = "D://Masterjaar gerief//portecle-1.11/" + "store2" + ".jks";
+            fis = new FileInputStream(fileName);
+            password = "".toCharArray();
+            keyStore.load(fis,password);
+            fis.close();
+
+            password1 = "".toCharArray();
+            alias = "werner";
+
+            key = (PrivateKey) keyStore.getKey(alias,password1);
+            cert = (X509Certificate) keyStore.getCertificate(alias);
+
+            System.out.println(cert);
+
+
+        } catch (NoSuchAlgorithmException | InvalidKeyException | NoSuchPaddingException | IllegalBlockSizeException | BadPaddingException | IOException | SignatureException | CertificateException | KeyStoreException | UnrecoverableKeyException e) {
             e.printStackTrace();
         }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
     }
